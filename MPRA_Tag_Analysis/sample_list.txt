@@ -1,0 +1,8 @@
+plasmid_r1	OL13_FADS_plasmid_rep1.tag
+plasmid_r2	OL13_FADS_plasmid_rep2.tag
+plasmid_r3	OL13_FADS_plasmid_rep3.tag
+plasmid_r4	OL13_FADS_plasmid_rep4.tag
+K562_r1	OL13_FADS_K562_rep1.tag
+K562_r2	OL13_FADS_K562_rep2.tag
+K562_r3	OL13_FADS_K562_rep3.tag
+K562_r4	OL13_FADS_K562_rep4.tag
