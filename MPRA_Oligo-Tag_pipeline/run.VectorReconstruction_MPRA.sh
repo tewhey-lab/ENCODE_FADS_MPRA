@@ -1,10 +1,9 @@
-INSTALL_PATH="../"
-
+#REF="<Reference fasta>"
 #ID="<Output Prefix>"
+#THREADS=<number of cpus>
 #READ_A="<Read 1 fastq | fastq.gz>"
 #READ_B="<Read 2 fastq | fastq.gz>"
-#REF="<Reference fasta>"
-#THREADS=<number of cpus>
+
 
 REF=$1
 ID=$2
@@ -19,8 +18,8 @@ awk '{print ">"$1"#"$5"\n"$4}' ${ID}.merged.rc.match > ${ID}.merged.rc.match.enh
 minimap2 --for-only -Y --secondary=no -t $THREADS -m 10 -n 1 --end-bonus 12 -O 5 -E 1 -k 10 -2K50m --MD --eqx --cs=long -c -a $REF ${ID}.merged.rc.match.enh.fa > ${ID}.merged.rc.match.enh.sam 2> ${ID}.merged.rc.match.enh.log
 perl ${INSTALL_PATH}/MPRA_Oligo-Tag_pipeline/scripts/SAM2MPRA.pl -C -B ${ID}.merged.rc.match.enh.sam ${ID}.merged.rc.match.enh.mapped  > ${ID}.merged.rc.match.enh.mapped.log 2>&1
 
-grep PASS ${ID}.merged.rc.match.enh.mapped  | sort -S16G -k4 > ${ID}.merged.rc.match.enh.mapped.enh.pass.sort
-sort -S16G -k2 ${ID}.merged.rc.match.enh.mapped > ${ID}.merged.rc.match.enh.mapped.barcode.sort
+grep PASS ${ID}.merged.rc.match.enh.mapped  | sort -S${MAX_MEMORY}G -k4 > ${ID}.merged.rc.match.enh.mapped.enh.pass.sort
+sort -S${MAX_MEMORY}G -k2 ${ID}.merged.rc.match.enh.mapped > ${ID}.merged.rc.match.enh.mapped.barcode.sort
 perl ${INSTALL_PATH}/MPRA_Oligo-Tag_pipeline/scripts/Ct_seq.pl ${ID}.merged.rc.match.enh.mapped.barcode.sort 2 4 > ${ID}.merged.rc.match.enh.mapped.barcode.ct
 perl ${INSTALL_PATH}/MPRA_Oligo-Tag_pipeline/scripts/Ct_seq.pl ${ID}.merged.rc.match.enh.mapped.enh.pass.sort 4 2 > ${ID}.merged.rc.match.enh.mapped.enh.pass.ct
 awk '{ct[$4]++}END{for (i in ct)print i "\t" ct[i]}' ${ID}.merged.rc.match.enh.mapped.barcode.ct | sort -k1n > ${ID}.merged.rc.match.enh.mapped.barcode.ct.hist
