@@ -10,17 +10,21 @@ library(BSgenome.Hsapiens.UCSC.hg19)
 
 args = commandArgs(trailingOnly=TRUE)
 
-wd<-args[1]
-
+countfile<-args[1]
+wd<-dirname(dirname(countfile))
 file_prefix=args[2]
 file_date=format(Sys.Date(), "%Y%m%d")
-setwd(paste0(wd,"<Dir Name>"))
+setwd(paste0(wd,"/count_analysis/"))
 dir.create("plots")
 dir.create("results")
 
+message(countfile)
+message(file_prefix)
+message(wd)
+
 inputFullAttributesFileName=paste0(wd,"/MPRA_Tag_Analysis/OL13_FADS_Encode.attributes")
 
-countsFileName=paste0(wd,"/tag_seq/args[2]")
+countsFileName=paste0(countfile)
 inputConditionsFileName=paste0(wd,"/MPRA_Tag_Analysis/OL13_FADS_K562.cond")
 
 tag_counts<-read.table(countsFileName,header=TRUE)
@@ -49,7 +53,6 @@ colData$condition=relevel(colData$condition, "DNA")
 rowNames=rownames(countData)
 colnames(countData)<-row.names(colData)
 
-#Reorder to fix prior cell line issue. Doing this incase any later code refers directly to column position
 #Just doing this so the DF can be reordered....
 colData$DNA<-0
 colData[colData$condition=="DNA",]$DNA<-1 
@@ -86,19 +89,12 @@ for (celltype in levels(colData$condition)) {
   if(celltype=="DNA") next
   message(celltype)
   output_tmpA = results(dds_results, contrast=c("condition",celltype,"DNA"))
-  ###Code for neg (all or ctrl) normalization
-  #output_tmpA_neg<-output_tmpA[nonexpA,]
-  #nonexpA<-row.names(output_tmpA_neg[!is.na(output_tmpA_neg$pvalue) & output_tmpA_neg$pvalue>0.001,])
 
   ##Code for summit shift normalization
   summit<-which.max(density(output_tmpA$log2FoldChange)$y)
   log_offset<-2^(density(output_tmpA$log2FoldChange)$x[summit])
   sizeFactors(dds_results)[which(colData$condition==celltype)]<-sizeFactors(dds_results)[which(colData$condition==celltype)]*(log_offset)
 }
-
-###Code for neg (all or ctrl) normalization
-#dds_results_tmp<-estimateSizeFactors(dds[nonexpA])
-#sizeFactors(dds_results)<-sizeFactors(dds_results_tmp)
 
 dds_results<-estimateDispersions(dds_results,fitType='local')
 dds_results<-nbinomWaldTest(dds_results)
@@ -155,24 +151,6 @@ expand_dups<-function(table)
   }
   return(final_table)
 }
-
-####TEST code
-#ctrl_cols<-c("Plasmid_12","Plasmid_13","Plasmid_14","Plasmid_15","Plasmid_16")
-#exp_cols<-c("HTR8_3","HTR8_4","HTR8_5","HTR8_6","HTR8_7")
-#Ctrl.Mean=rowMeans(counts[, c(6,7,8,9,10)])
-#Exp.Mean=rowMeans(counts[, c(1,2,3,4,5)])
-#output_2<-cbind(Ctrl.Mean,Exp.Mean,outputA[,-1])
-#output_undup<-expand_dups(output_2)
-
-#tmp_attributeData<-fullattributeData
-#counts<-counts
-#func_output<-output_undup
-#Ctrl.Mean<-Ctrl.Mean
-#Exp.Mean<-Exp.Mean
-#ctrl_cols<-ctrl_cols
-#exp_cols<-exp_cols
-####
-
 
 ### Function to perform TTest on individual cell types
 CellSpecific_Ttest<-function(tmp_attributeData, counts, func_output, Ctrl.Mean, Exp.Mean, ctrl_cols, exp_cols) {
@@ -309,8 +287,6 @@ for (celltype in levels(colData$condition)) {
   printbed$log10fdr=-log10(printbed$log10fdr)
 
   write.table(printbed,paste0("results/",file_prefix,"_",celltype,"_",file_date,".bed"),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
-
-
 
 }
 
@@ -490,20 +466,6 @@ gr <- GRanges(seqnames=Rle(tmp$chr),
   
   export(ucsc_gr_pos,paste0("results/",file_prefix,"_",celltype,"_tiling_",file_date,"_pos.bedgraph"),format="bedGRaph")
   export(ucsc_gr_neg,paste0("results/",file_prefix,"_",celltype,"_tiling_",file_date,"_pos.bedgraph"),format="bedGRaph")
-  
-  library(gwascat)
-  path = system.file(package="liftOver", "extdata", "hg19ToHg38.over.chain")
-  ch = import.chain("/Users/tewher/Genome/chains/hg19ToHg38.over.chain")
-  ucsc_gr_b38 = liftOver(ucsc_gr, ch)
-  class(ucsc_gr_b38)
-  
-  ucsc_gr_b38 = unlist(ucsc_gr_b38)
-  
-  ucsc_gr_b38_pos<-ucsc_gr_b38[ucsc_gr_b38@strand=="+",]
-  ucsc_gr_b38_neg<-ucsc_gr_b38[ucsc_gr_b38@strand=="-",]
-  export(ucsc_gr_b38_pos,paste0("results/",file_prefix,"_",celltype,"_tiling_",file_date,"_pos.b38.bedgraph"),format="bedGRaph",header=TRUE)
-  export(ucsc_gr_b38_neg,paste0("results/",file_prefix,"_",celltype,"_tiling_",file_date,"_pos.b38.bedgraph"),format="bedGRaph")
-  
   
   
   ##########
