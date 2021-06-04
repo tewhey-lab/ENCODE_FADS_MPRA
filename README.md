@@ -4,8 +4,8 @@ Download data from ENCODE DCC
 
 
 ##Prereqs
-# Conda
-# git
+Conda
+git
 
 #########
 # Create Env
