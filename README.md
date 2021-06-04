@@ -31,6 +31,7 @@ MAX_MEMORY=30
 mkdir oligo_tag
 cd oligo_tag
 
+# Step to create barcode/Oligo connections
 sbatch -q batch -N 1 -n 22 --mem 33G -t 24:00:00 -o slurm-%A_%a.out --wrap "../MPRA_Oligo-Tag_pipeline/run.VectorReconstruction_MPRA.sh ../files/ENCFF474GEU.fasta.gz OL13_FADS $THREADS ../files/ENCFF148NVC.fastq.gz ../files/ENCFF103XEY.fastq.gz"
 
 ##Tag Seq
@@ -60,8 +61,10 @@ cat OL13_FADS_plasmid_rep2.match | perl ${INSTALL_PATH}/MPRA_Tag_Analysis/associ
 cat OL13_FADS_plasmid_rep3.match | perl ${INSTALL_PATH}/MPRA_Tag_Analysis/associate_tags.pl stdin ${INSTALL_PATH}/oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep3.tag
 cat OL13_FADS_plasmid_rep4.match | perl ${INSTALL_PATH}/MPRA_Tag_Analysis/associate_tags.pl stdin ${INSTALL_PATH}/oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep4.tag
 
+# Create count matrix
 perl ${INSTALL_PATH}/MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ${INSTALL_PATH}/MPRA_Tag_Analysis/sample_list.txt OL13_FADS_K562_Counts.out >  OL13_FADS_K562_Counts.log
 
+# Create final processed data 
 cd ../count_analysis
 Rscript --vanilla ../MPRA_Tag_Analysis/FADS_MPRA_Analysis.R ../tag_seq/OL13_FADS_K562_Counts.out OL13_FADS
 
