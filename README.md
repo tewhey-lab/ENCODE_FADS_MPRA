@@ -17,6 +17,7 @@ conda activate FADS_ENCODE
 #########
 # Download files
 xargs -n1 -a OL13_encode_download.txt -I URL curl -O -L URL
+
 git clone https://github.com/tewhey-lab/ENCODE_FADS_MPRA.git
 
 # Setup
