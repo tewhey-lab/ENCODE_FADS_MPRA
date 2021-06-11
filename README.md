@@ -35,7 +35,7 @@ cd ../
 
 ### Identify barcode-oligo pairs
 
-Required ~30 GB of memory. This can be decreased by changing run.VectorReconstruction_MPRA.sh
+Requires ~30 GB of memory. This can be decreased by changing run.VectorReconstruction_MPRA.sh
 
 ```
 mkdir oligo_tag
