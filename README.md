@@ -13,12 +13,8 @@ conda create --name FADS_ENCODE -c bioconda python=3.6 flash2=2.2.00 minimap2=2.
 
 conda activate FADS_ENCODE
 
+
 #########
-# Download files
-xargs -n1 -a OL13_encode_download.txt -I URL curl -O -L URL
-
-git clone https://github.com/tewhey-lab/ENCODE_FADS_MPRA.git
-
 # Setup
 conda activate FADS_ENCODE
 
@@ -26,6 +22,13 @@ INSTALL_PATH="../"
 THREADS=20
 MAX_MEMORY=30
 
+git clone https://github.com/tewhey-lab/ENCODE_FADS_MPRA.git
+cd ENCODE_FADS_MPRA
+
+# Download files
+cd files
+xargs -n1 -a OL13_encode_download.txt -I URL curl -O -L URL
+cd ../
 
 # Run
 mkdir oligo_tag
