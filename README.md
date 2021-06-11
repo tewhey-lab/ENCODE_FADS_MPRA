@@ -29,7 +29,9 @@ cd ENCODE_FADS_MPRA
 
 # Download files
 cd files
+
 xargs -n1 -a OL13_encode_download.txt -I URL curl -O -L URL
+
 cd ../
 
 # Run
