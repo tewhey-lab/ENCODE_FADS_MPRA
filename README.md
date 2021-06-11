@@ -19,7 +19,9 @@ conda activate FADS_ENCODE
 conda activate FADS_ENCODE
 
 INSTALL_PATH="../"
+
 THREADS=20
+
 MAX_MEMORY=30
 
 git clone https://github.com/tewhey-lab/ENCODE_FADS_MPRA.git
