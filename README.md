@@ -1,16 +1,15 @@
-# ENCODE_FADS_MPRA
-
-Download data from ENCODE DCC
+# ENCODE MPRA Pipeline for FADS tiling experiment
 
 
-##Prereqs
-Conda
+## Prereqs
+conda\
 git
 
-#########
 # Create Env
-conda create --name FADS_ENCODE -c bioconda python=3.6 flash2=2.2.00 minimap2=2.17 preseq perl-text-levenshteinxs bioconductor-deseq2=1.28.0 bioconductor-rtracklayer bioconductor-genomicranges bioconductor-bsgenome.hsapiens.ucsc.hg19 r-ggplot2 r-gridextra r-tidyr r-splitstackshape
 
+```
+conda create --name FADS_ENCODE -c bioconda python=3.6 flash2=2.2.00 minimap2=2.17 preseq perl-text-levenshteinxs bioconductor-deseq2=1.28.0 bioconductor-rtracklayer bioconductor-genomicranges bioconductor-bsgenome.hsapiens.ucsc.hg19 r-ggplot2 r-gridextra r-tidyr r-splitstackshape
+```
 conda activate FADS_ENCODE
 
 
