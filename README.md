@@ -33,7 +33,7 @@ cd ../
 
 ## Run
 
-### Identify barcode-oligo pairs
+### 1 Identify barcode-oligo pairs
 
 Requires ~30 GB of memory. This can be decreased by changing run.VectorReconstruction_MPRA.sh
 
@@ -43,7 +43,7 @@ cd oligo_tag
 ../MPRA_Oligo-Tag_pipeline/run.VectorReconstruction_MPRA.sh ../files/ENCFF474GEU.fasta.gz OL13_FADS $THREADS ../files/ENCFF148NVC.fastq.gz ../files/ENCFF103XEY.fastq.gz
 ```
 
-### Process Tag-seq data
+### 2 Process Tag-seq data and generate the count matrix
 
 ```
 mkdir tag_seq
@@ -69,15 +69,11 @@ cat OL13_FADS_plasmid_rep1.match | perl ../MPRA_Tag_Analysis/associate_tags.pl s
 cat OL13_FADS_plasmid_rep2.match | perl ../MPRA_Tag_Analysis/associate_tags.pl stdin ../oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep2.tag
 cat OL13_FADS_plasmid_rep3.match | perl ../MPRA_Tag_Analysis/associate_tags.pl stdin ../oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep3.tag
 cat OL13_FADS_plasmid_rep4.match | perl ../MPRA_Tag_Analysis/associate_tags.pl stdin ../oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep4.tag
-```
 
-### Generate the count matrix
-
-```
 perl ../MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ../MPRA_Tag_Analysis/sample_list.txt OL13_FADS_K562_Counts.out >  OL13_FADS_K562_Counts.log
 ```
 
-### Analyze counts and generate processed files
+### 3 Analyze counts and generate processed files
 
 ```
 cd ../count_analysis
