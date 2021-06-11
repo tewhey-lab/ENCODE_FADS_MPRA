@@ -5,7 +5,7 @@
 * conda
 * git
 
-## Create Env
+## Create environment
 
 ```
 conda create --name FADS_ENCODE -c bioconda python=3.6 flash2=2.2.00 minimap2=2.17 preseq perl-text-levenshteinxs bioconductor-deseq2=1.28.0 bioconductor-rtracklayer bioconductor-genomicranges bioconductor-bsgenome.hsapiens.ucsc.hg19 r-ggplot2 r-gridextra r-tidyr r-splitstackshape
@@ -33,7 +33,9 @@ cd ../
 
 ## Run
 
-Step to create barcode/Oligo connections
+### Identify barcode-oligo pairs
+
+Required ~30 GB of memory. This can be decreased by changing run.VectorReconstruction_MPRA.sh
 
 ```
 mkdir oligo_tag
@@ -41,7 +43,7 @@ cd oligo_tag
 ../MPRA_Oligo-Tag_pipeline/run.VectorReconstruction_MPRA.sh ../files/ENCFF474GEU.fasta.gz OL13_FADS $THREADS ../files/ENCFF148NVC.fastq.gz ../files/ENCFF103XEY.fastq.gz
 ```
 
-##Tag Seq
+### Process Tag-seq data
 
 ```
 mkdir tag_seq
@@ -69,13 +71,13 @@ cat OL13_FADS_plasmid_rep3.match | perl ../MPRA_Tag_Analysis/associate_tags.pl s
 cat OL13_FADS_plasmid_rep4.match | perl ../MPRA_Tag_Analysis/associate_tags.pl stdin ../oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep4.tag
 ```
 
-## Create count matrix
+### Generate the count matrix
 
 ```
 perl ../MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ../MPRA_Tag_Analysis/sample_list.txt OL13_FADS_K562_Counts.out >  OL13_FADS_K562_Counts.log
 ```
 
-## Create final processed data 
+### Analyze counts and generate processed files
 
 ```
 cd ../count_analysis
