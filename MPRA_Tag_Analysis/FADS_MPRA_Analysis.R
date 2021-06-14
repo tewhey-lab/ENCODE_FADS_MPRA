@@ -313,27 +313,6 @@ for (celltype in levels(colData$condition)) {
   printbed$strand[printbed$strand=="rev"]="-"
   printbed$log10pval=-log10(printbed$log10pval)
   printbed$log10fdr=-log10(printbed$log10fdr)
-  
-  printbed$log2fc<-round_df(printbed$log2fc,7)
-  printbed[,"input-count"]<-round_df(printbed[,"input-count"],5)
-  printbed[,"output-count"]<-round_df(printbed[,"output-count"],5)
-  printbed[,"lfc-se"]<-round_df(printbed[,"lfc-se"],7)
-  printbed$log10pval<-round_df(printbed$log10pval,7)
-  printbed$log10fdr<-round_df(printbed$log10fdr,7)
-
-
-
-  write.table(printbed,paste0("results/",file_prefix,"_",celltype,"_",file_date,".bed"),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
-
-  full_bed_outputA<-merge(fullattributeData, as.matrix(output_undup),by.x="ID",by.y="row.names",all.x=TRUE,no.dups=FALSE)
-  printbed<-full_bed_outputA[,c("chr","start","stop","ID","strand","log2FoldChange","Ctrl.Mean","Exp.Mean","pvalue","padj","lfcSE","cigar","md-tag","project")]      
-  printbed$score<-"."
-  printbed<-printbed[,c("chr","start","stop","ID","score","strand","log2FoldChange","Ctrl.Mean","Exp.Mean","pvalue","padj","lfcSE","cigar","md-tag","project")]      
-  colnames(printbed)<-c("chr","start","stop","id","score","strand","log2fc","input-count","output-count","log10pval","log10fdr","lfc-se","cigar","md-tag","project")
-  printbed$strand[printbed$strand=="fwd"]="+"
-  printbed$strand[printbed$strand=="rev"]="-"
-  printbed$log10pval=-log10(printbed$log10pval)
-  printbed$log10fdr=-log10(printbed$log10fdr)
 
   printbed$log2fc<-round_df(printbed$log2fc,7)
   printbed[,"input-count"]<-round_df(printbed[,"input-count"],5)

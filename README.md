@@ -82,9 +82,10 @@ mkdir count_analysis
 cd count_analysis
 Rscript --vanilla ../MPRA_Tag_Analysis/FADS_MPRA_Analysis.R ../tag_seq/OL13_FADS_K562_Counts.out OL13_FADS
 
-cut -f1-11 OL13_FADS_K562_20210512.bed |  awk '(NR>1 && $7 !~ "NA"){if($10~"NA"){$10=0;$11=0};$5=0;print "chr"$1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11}' | sort -k1,1 -k2,2n > OL13_FADS_Tile_K562.hg19.enc.bed
+cd results/
+cut -f1-11 OL13_FADS_K562_[DATE].bed |  awk '(NR>1 && $7 !~ "NA"){if($10~"NA"){$10=0;$11=0};$5=0;print "chr"$1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11}' | sort -k1,1 -k2,2n > OL13_FADS_Tile_K562.hg19.enc.bed
 gzip -c OL13_FADS_Tile_K562.hg19.enc.bed > OL13_FADS_Tile_K562.hg19.enc.bed.gz
-bedToBigBed -type=bed6+5 -as=../MPRA_Tag_Analysis/mpra_starr.as OL13_FADS_Tile_K562.hg19.enc.bed ../MPRA_Tag_Analysis/hg19.chrom.sizes OL13_FADS_Tile_K562.hg19.enc.bb
+bedToBigBed -type=bed6+5 -as=../../MPRA_Tag_Analysis/mpra_starr.as OL13_FADS_Tile_K562.hg19.enc.bed ../../MPRA_Tag_Analysis/hg19.chrom.sizes OL13_FADS_Tile_K562.hg19.enc.bb
 
 ```
 
