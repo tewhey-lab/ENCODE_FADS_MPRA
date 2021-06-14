@@ -33,7 +33,7 @@ cd ../
 
 ## Run
 
-### 1 Identify barcode-oligo pairs
+### 1. Identify barcode-oligo pairs
 
 Requires ~30 GB of memory. This can be decreased by changing run.VectorReconstruction_MPRA.sh
 
@@ -41,9 +41,10 @@ Requires ~30 GB of memory. This can be decreased by changing run.VectorReconstru
 mkdir oligo_tag
 cd oligo_tag
 ../MPRA_Oligo-Tag_pipeline/run.VectorReconstruction_MPRA.sh ../files/ENCFF474GEU.fasta.gz OL13_FADS $THREADS ../files/ENCFF148NVC.fastq.gz ../files/ENCFF103XEY.fastq.gz
+cd ..
 ```
 
-### 2 Process Tag-seq data and generate the count matrix
+### 2. Process Tag-seq data and generate the count matrix
 
 ```
 mkdir tag_seq
@@ -73,9 +74,10 @@ cat OL13_FADS_plasmid_rep4.match | perl ../MPRA_Tag_Analysis/associate_tags.pl s
 perl ../MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ../MPRA_Tag_Analysis/sample_list.txt OL13_FADS_K562_Counts.out >  OL13_FADS_K562_Counts.log
 ```
 
-### 3 Analyze counts and generate processed files
+### 3. Analyze counts and generate processed files
 
 ```
+mkdir count_analysis
 cd ../count_analysis
 Rscript --vanilla ../MPRA_Tag_Analysis/FADS_MPRA_Analysis.R ../tag_seq/OL13_FADS_K562_Counts.out OL13_FADS
 

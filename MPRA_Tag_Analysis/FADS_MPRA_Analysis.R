@@ -18,6 +18,8 @@ setwd(paste0(wd,"/count_analysis/"))
 dir.create("plots")
 dir.create("results")
 
+writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
+
 message(countfile)
 message(file_prefix)
 message(wd)
@@ -239,6 +241,16 @@ CellSpecific_Ttest<-function(tmp_attributeData, counts, func_output, Ctrl.Mean, 
 #### Loop through cell types
 
 
+round_df <- function(x, digits) {
+    # round all numeric variables
+    # x: data frame 
+    # digits: number of digits to round
+    numeric_columns <- sapply(x, mode) == 'numeric'
+    x[numeric_columns] <-  round(x[numeric_columns], digits)
+    x
+}
+
+
 full_output<-list()
 full_output_var<-list()
 
@@ -258,10 +270,38 @@ for (celltype in levels(colData$condition)) {
   
   full_outputA<-merge(fullattributeData, as.matrix(output_undup),by.x="ID",by.y="row.names",all.x=TRUE,no.dups=FALSE)
   full_output[[celltype]]<-full_outputA
+ 
+  full_outputA$log2FoldChange<-round_df(full_outputA$log2FoldChange,7)
+  full_outputA$Ctrl.Mean<-round_df(full_outputA$Ctrl.Mean,5)
+  full_outputA$Exp.Mean<-round_df(full_outputA$Exp.Mean,5)
+  full_outputA$lfcSE<-round_df(full_outputA$lfcSE,7)
+ 
   write.table(full_outputA,paste0("results/",file_prefix,"_",celltype,"_",file_date,".out"), row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
   
   outA<-CellSpecific_Ttest(fullattributeData, counts, output_undup, Ctrl.Mean, Exp.Mean, ctrl_cols, exp_cols) 
   full_output_var[[celltype]]<-outA
+  
+  outA$A.log2FC<-round_df(outA$A.log2FC,7)
+  outA$A.Ctrl.Mean<-round_df(outA$A.Ctrl.Mean,5)
+  outA$A.Exp.Mean<-round_df(outA$A.Exp.Mean,5)
+  outA$A.log2FC_SE<-round_df(outA$A.log2FC_SE,7)
+  outA$A.logP<-round_df(outA$A.logP,7)
+  outA$A.logPadj_BH<-round_df(outA$A.logPadj_BH,7)
+  outA$A.logPadj_BF<-round_df(outA$A.logPadj_BF,7)
+
+
+  outA$B.log2FC<-round_df(outA$B.log2FC,7)
+  outA$B.Ctrl.Mean<-round_df(outA$B.Ctrl.Mean,5)
+  outA$B.Exp.Mean<-round_df(outA$B.Exp.Mean,5)
+  outA$B.log2FC_SE<-round_df(outA$B.log2FC_SE,7)
+  outA$B.logP<-round_df(outA$B.logP,7)
+  outA$B.logPadj_BH<-round_df(outA$B.logPadj_BH,7)
+  outA$B.logPadj_BF<-round_df(outA$B.logPadj_BF,7)
+  
+  outA$LogSkew<-round_df(outA$LogSkew,7)
+  outA$Skew.logP<-round_df(outA$Skew.logP,7)
+  outA$Skew.logFDR<-round_df(outA$Skew.logFDR,7)
+  
   write.table(outA,paste0("results/",file_prefix,"_",celltype,"_emVAR_",file_date,".out"), row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
   
   full_bed_outputA<-merge(fullattributeData, as.matrix(output_undup),by.x="ID",by.y="row.names",all.x=TRUE,no.dups=FALSE)
@@ -273,6 +313,15 @@ for (celltype in levels(colData$condition)) {
   printbed$strand[printbed$strand=="rev"]="-"
   printbed$log10pval=-log10(printbed$log10pval)
   printbed$log10fdr=-log10(printbed$log10fdr)
+  
+  printbed$log2fc<-round_df(printbed$log2fc,7)
+  printbed[,"input-count"]<-round_df(printbed[,"input-count"],5)
+  printbed[,"output-count"]<-round_df(printbed[,"output-count"],5)
+  printbed[,"lfc-se"]<-round_df(printbed[,"lfc-se"],7)
+  printbed$log10pval<-round_df(printbed$log10pval,7)
+  printbed$log10fdr<-round_df(printbed$log10fdr,7)
+
+
 
   write.table(printbed,paste0("results/",file_prefix,"_",celltype,"_",file_date,".bed"),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
 
@@ -285,6 +334,14 @@ for (celltype in levels(colData$condition)) {
   printbed$strand[printbed$strand=="rev"]="-"
   printbed$log10pval=-log10(printbed$log10pval)
   printbed$log10fdr=-log10(printbed$log10fdr)
+
+  printbed$log2fc<-round_df(printbed$log2fc,7)
+  printbed[,"input-count"]<-round_df(printbed[,"input-count"],5)
+  printbed[,"output-count"]<-round_df(printbed[,"output-count"],5)
+  printbed[,"lfc-se"]<-round_df(printbed[,"lfc-se"],7)
+  printbed$log10pval<-round_df(printbed$log10pval,7)
+  printbed$log10fdr<-round_df(printbed$log10fdr,7)
+
 
   write.table(printbed,paste0("results/",file_prefix,"_",celltype,"_",file_date,".bed"),row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
 
