@@ -8,7 +8,7 @@
 ## Create environment
 
 ```
-conda create --name FADS_ENCODE -c bioconda python=3.6 flash2=2.2.00 minimap2=2.17 preseq perl-text-levenshteinxs bioconductor-deseq2=1.28.0 bioconductor-rtracklayer bioconductor-genomicranges bioconductor-bsgenome.hsapiens.ucsc.hg19 r-ggplot2 r-gridextra r-tidyr r-splitstackshape
+conda create --name FADS_ENCODE -c bioconda python=3.6 flash2=2.2.00 minimap2=2.17 preseq perl-text-levenshteinxs bioconductor-deseq2=1.28.0 bioconductor-rtracklayer bioconductor-genomicranges bioconductor-bsgenome.hsapiens.ucsc.hg19 r-ggplot2 r-gridextra r-tidyr r-splitstackshape ucsc-bedtobigbed
 conda activate FADS_ENCODE
 ```
 
@@ -72,15 +72,19 @@ cat OL13_FADS_plasmid_rep3.match | perl ../MPRA_Tag_Analysis/associate_tags.pl s
 cat OL13_FADS_plasmid_rep4.match | perl ../MPRA_Tag_Analysis/associate_tags.pl stdin ../oligo_tag/OL13_FADS.merged.rc.match.enh.mapped.barcode.ct.parsed tmp.out > OL13_FADS_plasmid_rep4.tag
 
 perl ../MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ../MPRA_Tag_Analysis/sample_list.txt OL13_FADS_K562_Counts.out >  OL13_FADS_K562_Counts.log
+cd ..
 ```
 
 ### 3. Analyze counts and generate processed files
 
 ```
 mkdir count_analysis
-cd ../count_analysis
+cd count_analysis
 Rscript --vanilla ../MPRA_Tag_Analysis/FADS_MPRA_Analysis.R ../tag_seq/OL13_FADS_K562_Counts.out OL13_FADS
 
 cut -f1-11 OL13_FADS_K562_20210512.bed |  awk '(NR>1 && $7 !~ "NA"){if($10~"NA"){$10=0;$11=0};$5=0;print "chr"$1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11}' | sort -k1,1 -k2,2n > OL13_FADS_Tile_K562.hg19.enc.bed
+gzip -c OL13_FADS_Tile_K562.hg19.enc.bed > OL13_FADS_Tile_K562.hg19.enc.bed.gz
+bedToBigBed -type=bed6+5 -as=../MPRA_Tag_Analysis/mpra_starr.as OL13_FADS_Tile_K562.hg19.enc.bed ../MPRA_Tag_Analysis/hg19.chrom.sizes OL13_FADS_Tile_K562.hg19.enc.bb
+
 ```
 
