@@ -33,7 +33,7 @@ cd ../
 
 ## Run
 
-### 1. Identify barcode-oligo pairs
+### 1. Identify barcode-oligo pairs (MPRAMatch)
 
 Requires ~30 GB of memory. This can be decreased by changing run.VectorReconstruction_MPRA.sh
 
@@ -44,7 +44,7 @@ cd oligo_tag
 cd ..
 ```
 
-### 2. Process Tag-seq data and generate the count matrix
+### 2. Process Tag-seq data and generate the count matrix (MPRACount)
 
 ```
 mkdir tag_seq
@@ -75,7 +75,7 @@ perl ../MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ../MPRA_Tag_Analysis/sampl
 cd ..
 ```
 
-### 3. Analyze counts and generate processed files
+### 3. Analyze counts and generate processed files (MPRAanalyze)
 
 ```
 mkdir count_analysis
