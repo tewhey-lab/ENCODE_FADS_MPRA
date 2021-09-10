@@ -75,7 +75,7 @@ perl ../MPRA_Tag_Analysis/compile_bc.pl -ECMS -A 0.05 ../MPRA_Tag_Analysis/sampl
 cd ..
 ```
 
-### 3. Analyze counts and generate processed files (MPRAanalyze)
+### 3. Analyze counts and generate processed files (MPRAmodel)
 
 ```
 mkdir count_analysis
